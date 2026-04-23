@@ -8,12 +8,12 @@
 
 | 파일 | 설명 |
 |------|------|
-| `claude.py` | 기본 버전 — 이동평균선(MA) 전략 |
-| `claude_v2.py` | 고급 버전 — MA + 뉴스 감성 분석(Claude AI) 결합 |
+| `bithumb_autotrading.py` | 기본 버전 — 이동평균선(MA) 전략 |
+| `bithumb_autotrading_v2.py` | 고급 버전 — MA + 뉴스 감성 분석(Claude AI) 결합 |
 
 ---
 
-## claude.py — 기본 버전
+## bithumb_autotrading.py — 기본 버전
 
 ### 전략
 
@@ -31,7 +31,7 @@ pip3 install pybithumb
 
 ### 설정
 
-`claude.py` 상단의 설정값을 수정합니다.
+`bithumb_autotrading.py` 상단의 설정값을 수정합니다.
 
 ```python
 ACCESS_KEY  = "YOUR_ACCESS_KEY"  # 빗썸 Access Key
@@ -50,12 +50,12 @@ LOOP_SEC    = 60                 # 루프 주기 (초)
 1. [빗썸](https://www.bithumb.com) 로그인
 2. 마이페이지 → **API 관리**
 3. **주문하기 + 잔고조회** 권한 체크 후 발급
-4. 발급받은 키를 `claude.py`에 입력
+4. 발급받은 키를 `bithumb_autotrading.py`에 입력
 
 ### 실행
 
 ```bash
-python3 claude.py
+python3 bithumb_autotrading.py
 ```
 
 ### 실행 예시
@@ -68,7 +68,7 @@ python3 claude.py
 
 ---
 
-## claude_v2.py — 고급 버전 (MA + 뉴스 감성 분석)
+## bithumb_autotrading_v2.py — 고급 버전 (MA + 뉴스 감성 분석)
 
 ### 전략
 
@@ -106,19 +106,40 @@ pip3 install pybithumb anthropic requests
 
 ### 설정
 
-`claude_v2.py` 상단의 설정값을 수정합니다.
+프로젝트 폴더에 `.env` 파일을 생성하고 아래 내용을 입력합니다.
 
-```python
-BITHUMB_ACCESS_KEY  = "YOUR_BITHUMB_ACCESS_KEY"
-BITHUMB_SECRET_KEY  = "YOUR_BITHUMB_SECRET_KEY"
-ANTHROPIC_API_KEY   = "YOUR_ANTHROPIC_API_KEY"
-CRYPTOPANIC_API_KEY = "YOUR_CRYPTOPANIC_API_KEY"
 ```
+BITHUMB_ACCESS_KEY=발급받은키
+BITHUMB_SECRET_KEY=발급받은시크릿
+ANTHROPIC_API_KEY=발급받은키
+CRYPTOPANIC_API_KEY=발급받은키
+```
+
+> `.env` 파일은 `.gitignore` 및 `.dockerignore`에 포함되어 있어 이미지에 포함되거나 GitHub에 올라가지 않습니다.
 
 ### 실행
 
+#### 로컬 실행
+
 ```bash
-python3 claude_v2.py
+python3 bithumb_autotrading_v2.py
+```
+
+#### Docker 실행 (권장)
+
+```bash
+# 단독 실행
+docker build -t bithumb-trade .
+docker run -d --name bithumb-trade --env-file .env -v $(pwd)/logs:/app/logs bithumb-trade
+
+# docker compose로 실행 (프로젝트 루트에서)
+docker compose up -d bithumb-trade
+```
+
+컨테이너 로그 확인:
+
+```bash
+docker logs -f bithumb-trade
 ```
 
 ### 실행 예시
@@ -133,9 +154,18 @@ python3 claude_v2.py
 
 ---
 
+## 업데이트 내역
+
+### 2026-04-23
+- **Docker 실행 환경 추가**: Dockerfile, .dockerignore, .env.example 추가
+- **docker compose 지원**: 루트 docker-compose.yml에 서비스 등록
+- **API 키 환경변수 전환**: `bithumb_autotrading_v2.py` 하드코딩 → `.env` + `python-dotenv` 방식으로 변경
+
+---
+
 ## 주의사항
 
 - 빗썸 API 등록 시 **허용 IP 주소**를 반드시 등록하세요.
-- **API 키를 코드에 직접 입력한 후 GitHub에 올리지 마세요.**
+- **API 키를 코드에 직접 입력한 후 GitHub에 올리지 마세요.** 반드시 `.env` 파일을 사용하세요.
 - 실거래 전 소액으로 테스트하는 것을 권장합니다.
 - 자동매매는 손실 위험이 있습니다.

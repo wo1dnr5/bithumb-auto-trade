@@ -1,0 +1,4 @@
+pybithumb
+anthropic
+requests
+python-dotenv

@@ -4,19 +4,24 @@
 - MA 신호와 뉴스 감성이 같은 방향일 때만 매매 실행
 """
 
+import os
+
 import pybithumb
 import anthropic
 import requests
 import time
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ──────────────────────────────────────────
 # 설정
 # ──────────────────────────────────────────
-BITHUMB_ACCESS_KEY  = "YOUR_BITHUMB_ACCESS_KEY"
-BITHUMB_SECRET_KEY  = "YOUR_BITHUMB_SECRET_KEY"
-ANTHROPIC_API_KEY   = "YOUR_ANTHROPIC_API_KEY"   # https://console.anthropic.com
-CRYPTOPANIC_API_KEY = "YOUR_CRYPTOPANIC_API_KEY"  # https://cryptopanic.com/developers/api
+BITHUMB_ACCESS_KEY  = os.environ.get("BITHUMB_ACCESS_KEY", "")
+BITHUMB_SECRET_KEY  = os.environ.get("BITHUMB_SECRET_KEY", "")
+ANTHROPIC_API_KEY   = os.environ.get("ANTHROPIC_API_KEY", "")
+CRYPTOPANIC_API_KEY = os.environ.get("CRYPTOPANIC_API_KEY", "")
 
 TICKER      = "BTC"
 INVEST_RATE = 0.3
